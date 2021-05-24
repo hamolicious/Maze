@@ -21,6 +21,8 @@ class Cell:
 		self.is_start = False
 		self.is_end = False
 
+		self.dist_from_end = 0
+
 		self.__wall_points = [
 			(Vec2d(0, 0) * self.size) + self.pos, # 0
 			(Vec2d(1, 0) * self.size) + self.pos, # 1
@@ -108,19 +110,17 @@ class Maze:
 
 	def __generate_maze(self):
 		stack = []
-		initial_cell = self.grid[randint(0, self.maze_size.w-1)][0]
-		initial_cell.is_visited = True
-		initial_cell.is_start = True
-		stack.append(initial_cell)
+		self.start_cell = self.grid[randint(0, self.maze_size.w-1)][0]
+		self.start_cell.is_visited = True
+		self.start_cell.is_start = True
+		stack.append(self.start_cell)
 
-		end_cell = self.grid[randint(0, self.maze_size.w-1)][self.maze_size.w-1]
-		end_cell.is_end = True
-
-		self.start_cell = initial_cell
-		self.end_cell = end_cell
+		self.end_cell = self.grid[randint(0, self.maze_size.w-1)][self.maze_size.w-1]
+		self.end_cell.is_end = True
 
 		while len(stack) != 0:
 			current_cell = stack.pop(-1)
+			current_cell.dist_from_end = current_cell.pos.dist(self.end_cell.pos)
 			neighbours = self.get_cell_neighbours(current_cell.pos)
 
 			unviseted_neighbours = [cell for cell in neighbours if not cell.is_visited]
