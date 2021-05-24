@@ -55,6 +55,9 @@ class Maze:
 		self.cell_size = self.screen_size.copy()
 		self.cell_size.div(self.maze_size)
 
+		self.start_cell = None
+		self.end_cell = None
+
 		self.grid = []
 		self.__generate_grid()
 		self.__generate_maze()
@@ -68,7 +71,7 @@ class Maze:
 
 			self.grid.append(row)
 
-	def __get_cell_neighbour(self, pos):
+	def get_cell_neighbours(self, pos):
 		gx = int(pos.x / self.cell_size.w)
 		gy = int(pos.y / self.cell_size.h)
 
@@ -113,9 +116,12 @@ class Maze:
 		end_cell = self.grid[randint(0, self.maze_size.w-1)][self.maze_size.w-1]
 		end_cell.is_end = True
 
+		self.start_cell = initial_cell
+		self.end_cell = end_cell
+
 		while len(stack) != 0:
 			current_cell = stack.pop(-1)
-			neighbours = self.__get_cell_neighbour(current_cell.pos)
+			neighbours = self.get_cell_neighbours(current_cell.pos)
 
 			unviseted_neighbours = [cell for cell in neighbours if not cell.is_visited]
 
@@ -127,19 +133,6 @@ class Maze:
 				chosen_cell.is_visited = True
 
 				stack.append(chosen_cell)
-
-	def set_cell_state_at(self, pos, new_state=-1):
-		pos = Vec2d(pos)
-
-		gx = int(pos.x / self.cell_size.w)
-		gy = int(pos.y / self.cell_size.h)
-
-		if Debug.mouse_press[0] and new_state == -1:
-			new_state = True
-		if Debug.mouse_press[2] and new_state == -1:
-			new_state = False
-
-		self.grid[gy][gx].is_wall = new_state
 
 	def display(self):
 		for row in self.grid:

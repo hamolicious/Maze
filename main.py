@@ -1,6 +1,7 @@
 import pygame
 from time import time
 from maze import Maze, Debug
+from player import Player
 
 #region pygame init
 pygame.init()
@@ -14,9 +15,12 @@ delta_time = 0 ; frame_start_time = 0
 #endregion
 
 def generate_maze():
-	return Maze(screen, size, 30)
+	maze = Maze(screen, size, 30)
+	player = Player(screen, maze.start_cell, maze)
 
-maze = generate_maze()
+	return maze, player
+
+maze, player = generate_maze()
 key_lock = False
 
 while True:
@@ -40,10 +44,10 @@ while True:
 	if sum(key_press) == 0:
 		key_lock = False
 
-	Debug.mouse_pos = None
-	Debug.mouse_press = mouse_press
+	player.update(key_press)
 
 	maze.display()
+	player.display()
 
 	pygame.display.update()
 	clock.tick(fps)
