@@ -13,6 +13,7 @@ class Player:
 		self.color = Color()
 
 		self.key_lock = False
+		self.is_maze_completed = False
 
 	def __get_center_of_cell(self, cell=None):
 		if cell is None:
@@ -52,6 +53,9 @@ class Player:
 
 		self.current_cell = self.maze.grid[gy][gx]
 		self.pos.linear_interpolate(self.__get_center_of_cell())
+
+		if self.current_cell.is_end:
+			self.is_maze_completed = True
 
 	def display(self):
 		pygame.draw.circle(self.screen, self.color.get(), self.pos.get_int(), self.current_cell.size.w * self.player_width)

@@ -35,11 +35,11 @@ while True:
 	mouse_press = pygame.mouse.get_pressed()
 	key_press   = pygame.key.get_pressed()
 
-	if key_press[pygame.K_r] and not key_lock:
+	if (key_press[pygame.K_r] and not key_lock) or player.is_maze_completed:
 		maze, player = generate_maze()
 		key_lock = True
 
-	if key_press[pygame.K_ESCAPE]:quit()
+	if key_press[pygame.K_ESCAPE] : quit()
 
 	if sum(key_press) == 0:
 		key_lock = False
